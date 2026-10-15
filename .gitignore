@@ -1,0 +1,13 @@
+# Secrets
+.env
+
+# Runtime output
+logs/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+dist/

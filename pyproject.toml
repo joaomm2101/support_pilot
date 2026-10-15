@@ -1,0 +1,18 @@
+[project]
+name = "support-pilot"
+version = "0.1.0"
+description = "Developer-support assistant that answers FastAPI documentation questions using RAG."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.143.1",
+    "openai>=3.31.0",
+    "pydantic-settings>=2.16.0",
+    "python-dotenv>=1.2.4",
+    "uvicorn>=0.54.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
