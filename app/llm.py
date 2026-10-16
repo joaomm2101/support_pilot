@@ -9,7 +9,7 @@ import time
 from dataclasses import dataclass
 from functools import lru_cache
 
-from openai import AsyncOpenAI
+from openai import AsyncOpenAI, OpenAIError
 
 from app.config import get_settings
 
@@ -18,6 +18,10 @@ SYSTEM_PROMPT = (
     "with questions about FastAPI. Answer clearly and concisely, and provide code examples when relevant."
     "If you are not sure about the answer, say so. Do not make up answers."
 )
+
+class LLMError(Exception):
+    """Raised when the LLM call fails."""
+
 
 
 @dataclass(frozen=True)
@@ -38,12 +42,16 @@ async def ask_llm(question: str) -> LLMResult:
     client = get_client()
 
     start = time.perf_counter()
-    response = await client.chat.completions.create(
-        model=settings.llm_model,
-        instructions=SYSTEM_PROMPT,
-        input=question,
-    )
+    try:
+        response = await client.responses.create(
+            model=settings.llm_model,
+            instructions=SYSTEM_PROMPT,
+            input=question,
+        )
+    except OpenAIError as exc:
+        raise LLMError("LLM provider call failed") from exc
 
+    
     latency_ms = (time.perf_counter() - start) * 1000
 
     return LLMResult(
